@@ -1,4 +1,5 @@
 import 'package:cat_app/pages/Login.dart';
+import 'package:cat_app/routes.dart';
 import 'package:flutter/material.dart';
 void main(){
   runApp(MaterialApp(
@@ -12,6 +13,7 @@ void main(){
         bodyText2: TextStyle(fontSize: 18.0),
       ),
     ),
+    routes:routes,
     home: Login(),
   ));
 }

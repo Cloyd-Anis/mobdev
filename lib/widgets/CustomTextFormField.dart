@@ -5,14 +5,15 @@ class CustomTextFormfield extends StatelessWidget {
   final IconData iconData;
   final TextEditingController textEditingController;
   final TextInputType textInputType;
-  
+  final Function validation;
 
   CustomTextFormfield(
     {@required this.labelText,
     @required this.hintText,
     @required this.iconData,
     @required this.textEditingController,
-    @required this.textInputType});
+    @required this.textInputType,
+    @required this.validation});
 
 
   @override
@@ -20,6 +21,7 @@ class CustomTextFormfield extends StatelessWidget {
     return TextFormField(
       controller: textEditingController,
       keyboardType: textInputType,
+      validator: validation,
       decoration: InputDecoration(
         prefixIcon: Container(
           padding: EdgeInsets.symmetric(horizontal: 15.0),

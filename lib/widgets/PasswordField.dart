@@ -6,18 +6,22 @@ class PasswordField extends StatelessWidget {
   final TextEditingController textEditingController;
   final bool obscureText;
   final Function onTap;
+  final Function validation;
+
   PasswordField(
       {@required this.labelText,
       @required this.hintText,
       @required this.textEditingController,
       @required this.obscureText,
-      @required this.onTap});
+      @required this.onTap,
+      @required this.validation});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: textEditingController,
       obscureText: obscureText,
+      validator: validation,
       decoration: InputDecoration(
           prefixIcon: Container(
           padding: EdgeInsets.symmetric(horizontal: 15.0),
