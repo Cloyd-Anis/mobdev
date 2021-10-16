@@ -15,7 +15,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int count = 0;
+  int count = 1;
   List<ImageModel> images = [];
   var items = ['Profile', 'Setting', 'Logout'];
   static const String url = "thatcopy.pw";
