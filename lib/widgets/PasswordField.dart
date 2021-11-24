@@ -1,38 +1,37 @@
 import 'package:flutter/material.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class PasswordField extends StatelessWidget {
   final String labelText;
   final String hintText;
-  final TextEditingController textEditingController;
   final bool obscureText;
   final Function onTap;
-  final Function validation;
+ final TextEditingController controller;
 
   PasswordField(
       {@required this.labelText,
       @required this.hintText,
-      @required this.textEditingController,
       @required this.obscureText,
       @required this.onTap,
-      @required this.validation});
+      @required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: textEditingController,
       obscureText: obscureText,
-      validator: validation,
       decoration: InputDecoration(
-          prefixIcon: Container(
+        prefixIcon: Container(
           padding: EdgeInsets.symmetric(horizontal: 15.0),
-          child: Icon(Icons.lock),
-      ),
-          suffixIcon: GestureDetector(
-            onTap: onTap,
-            child: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+          child: Icon(
+            FontAwesomeIcons.lock,
           ),
-          labelText: labelText,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
+        ),
+        suffixIcon: GestureDetector(
+          child: Icon(obscureText ? Icons.visibility : Icons.visibility_off),
+          onTap: onTap,
+        ),
+        labelText: labelText,
+        hintText: hintText,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
       ),
     );
   }

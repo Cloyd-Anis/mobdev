@@ -5,100 +5,93 @@ import 'package:cat_app/widgets/CustomTextFormField.dart';
 import 'package:cat_app/widgets/PasswordField.dart';
 import 'package:cat_app/widgets/PrimaryButton.dart';
 import 'package:cat_app/widgets/SecondaryButton.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 class Register extends StatefulWidget {
-  static const String routeName = "register";
+  static  String routeName = "/register";
   @override
   _RegisterState createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> with ValidationMixin {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController emailTextController = TextEditingController();
-  final TextEditingController passwordTextController = TextEditingController();
-  final TextEditingController confirmPasswordTextController =
-      TextEditingController();
-  bool obscureText = true;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Registration Page",
-          style: TextStyle(fontSize: 20.0),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
         ),
-      ),
-      body: Container(
-        alignment: Alignment.topCenter,
-        padding: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
+        body: Container(
+          alignment: Alignment.topCenter,
+          padding: EdgeInsets.symmetric(horizontal: 20.0),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Form(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                   SizedBox(
-                    height: 10.0,
-                  ),
-                  CustomTextFormfield(
+                  CustomTextFormField(
                       labelText: "First Name",
-                      hintText: "First Name",
-                      iconData: Icons.person,
-                      textEditingController: emailTextController,
-                      textInputType: TextInputType.emailAddress,
-                      validation: validateEmail),
+                      hintText:
+                          "First Name must have a minimum of 4 characters.",
+                      iconData: FontAwesomeIcons.user,
+                      controller: TextEditingController()),
                   SizedBox(
                     height: 20.0,
                   ),
-                  CustomTextFormfield(
+                  CustomTextFormField(
                       labelText: "Last Name",
-                      hintText: "Last Name",
-                      iconData: Icons.person,
-                      textEditingController: emailTextController,
-                      textInputType: TextInputType.emailAddress,
-                      validation: validateEmail),
+                      hintText:
+                          "First Name must have a minimum of 4 characters.",
+                      iconData: FontAwesomeIcons.user,
+                      controller: TextEditingController()),
                   SizedBox(
                     height: 20.0,
                   ),
-                  CustomTextFormfield(
-                      labelText: "Email Address",
-                      hintText: "Enter a valid email",
-                      iconData: Icons.email,
-                      textEditingController: emailTextController,
-                      textInputType: TextInputType.emailAddress,
-                      validation: validateEmail),
+                  CustomTextFormField(
+                      labelText: "Email",
+                      hintText: "Enter a valid email.",
+                      iconData: FontAwesomeIcons.solidEnvelope,
+                      controller: TextEditingController()),
                   SizedBox(
                     height: 20.0,
                   ),
                   PasswordField(
+                      obscureText: _obscurePassword,
+                      onTap: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
                       labelText: "Password",
                       hintText: "Enter your password",
-                      obscureText: obscureText,
-                      textEditingController: passwordTextController,
-                      onTap: () {
-                        setPasswordVisiblity();
-                      },
-                      validation: validatePassword),
+                      controller: TextEditingController()),
                   SizedBox(
                     height: 20.0,
                   ),
-                  // PasswordField(
-                  //     labelText: "Confirm Password",
-                  //     hintText: "Enter your password",
-                  //     obscureText: obscureText,
-                  //     textEditingController: confirmPasswordTextController,
-                  //     onTap: () {
-                  //       setPasswordVisiblity();
-                  //     },
-                  //     validation: validatePassword),
-                  // SizedBox(
-                  //   height: 20.0,
-                  // ),
+                  PasswordField(
+                      obscureText: _obscureConfirmPassword,
+                      onTap: () {
+                        setState(() {
+                          _obscureConfirmPassword = !_obscureConfirmPassword;
+                        });
+                      },
+                      labelText: "Confirm Password",
+                      hintText: "Your passwords must match.",
+                      controller: TextEditingController()),
+                  SizedBox(
+                    height: 20.0,
+                  ),
                   PrimaryButton(
                       text: "Register",
-                      iconData: Icons.app_registration_rounded,
-                      onPress: register),
+                      iconData: FontAwesomeIcons.solidFolder,
+                      onPress: () {
+                        print("Register button");
+                      }),
                   SizedBox(
                     height: 20.0,
                   ),
@@ -106,39 +99,23 @@ class _RegisterState extends State<Register> with ValidationMixin {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       SecondaryButton(
-                          text: "Already have an Account? Login",
+                          text: "Already have an account? Login",
                           onPress: () {
-                            navigateLogin(context);
+                            Get.offNamed(Login.routeName);
                           }),
-                      SecondaryButton(text: "Forgot Password", onPress: () {}),
+                      SecondaryButton(
+                          text: "Forgot Password?",
+                          onPress: () {
+                            //Get.toNamed(ForgotPassword.routeName);
+                          }),
                     ],
                   ),
                 ],
-              ),
+              )),
             ),
           ),
         ),
       ),
-    ));
-  }
-
-
-
-void register(){
-    if(formKey.currentState.validate()){
-      print("Valid inputs");
-    }else{
-      print("Invalid input");
-    }
-}
-
-  void setPasswordVisiblity() {
-    setState(() {
-      obscureText = !obscureText;
-    });
-  }
-
-  void navigateLogin(BuildContext context) {
-    Navigator.pushNamed(context, Login.routeName);
+    );
   }
 }

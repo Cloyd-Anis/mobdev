@@ -1,100 +1,135 @@
-import 'package:cat_app/mixins/ValidationMixin.dart';
+
+import 'package:cat_app/pages/ForgotPassword.dart';
 import 'package:cat_app/pages/Register.dart';
 import 'package:cat_app/pages/Dashboard.dart';
-import 'package:cat_app/widgets/CustomTextFormField.dart';
-import 'package:cat_app/widgets/PasswordField.dart';
-import 'package:cat_app/widgets/PrimaryButton.dart';
-import 'package:cat_app/widgets/SecondaryButton.dart';
+import 'package:cat_app/services/AuthService.dart';
+import 'package:cat_app/services/LocalStorageService.dart';
+import '../widgets/PrimaryButton.dart';
+import '../widgets/SecondaryButton.dart';
+import '../widgets/CustomTextFormField.dart';
+import '../widgets/PasswordField.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:get/get.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Login extends StatefulWidget {
-  static const String routeName = "login";
+  static  String routeName = "/login";
   @override
   _LoginState createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> with ValidationMixin {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  final TextEditingController emailTextController = TextEditingController();
-  final TextEditingController passwordTextController = TextEditingController();
-  bool obscureText = true;
+class _LoginState extends State<Login> {
+  AuthService authService = AuthService();
+  bool _obscureText = true;
+  bool isLogginIn = false;
+
   @override
-  Widget build(BuildContext context) {
-    return SafeArea(
+   Widget build(BuildContext context) {
+     return SafeArea(
+      child: ModalProgressHUD(
+        inAsyncCall: isLogginIn,
         child: Scaffold(
-      body: Container(
-        alignment: Alignment.topCenter,
-        padding: EdgeInsets.symmetric(horizontal: 20.0),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Form(
-              key:formKey,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  CustomTextFormfield(
-                      labelText: "Email Address",
-                      hintText: "Enter a valid email",
-                      iconData: Icons.email,
-                      textEditingController: emailTextController,
-                      textInputType: TextInputType.emailAddress,
-                      validation: validateEmail),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  PasswordField(
-                      labelText: "Password",
-                      hintText: "Enter your password",
-                      obscureText: obscureText,
-                      textEditingController: passwordTextController,
-                      onTap: () {
-                        setPasswordVisiblity();
-                      },
-                      validation: validatePassword),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  PrimaryButton(
-                      text: "Login", iconData: Icons.login, onPress: login),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SecondaryButton(
-                          text: "New User? Register",
-                          onPress: () {
-                            navigateRegister(context);
-                          }),
-                      SecondaryButton(text: "Forgot Password", onPress: () {}),
-                    ],
-                  ),
-                ],
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+          body: Container(
+            alignment: Alignment.topCenter,
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Form(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    CustomTextFormField(
+                        labelText: "Email",
+                        hintText: "Enter a valid email.",
+                        iconData: FontAwesomeIcons.solidEnvelope,
+                        controller: TextEditingController()),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    PasswordField(
+                        obscureText: _obscureText,
+                        onTap: () {
+                          setState(() {
+                            _obscureText = !_obscureText;
+                          });
+                        },
+                        labelText: "Password",
+                        hintText: "Enter your password",
+                        controller: TextEditingController()),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    PrimaryButton(
+                        text: "Login",
+                        iconData: FontAwesomeIcons.doorOpen,
+                        onPress: () {
+                          //authenticate here
+                          Get.offNamed(Dashboard.routeName);
+                        }),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    PrimaryButton(
+                        text: "Sign-in with Google",
+                        iconData: FontAwesomeIcons.google,
+                        onPress: login),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SecondaryButton(
+                            text: "New User? Register",
+                            onPress: () {
+                              Get.offNamed(Register.routeName);
+                            }),
+                        SecondaryButton(
+                            text: "Forgot Password?",
+                            onPress: () {
+                              Get.toNamed(ForgotPassword.routeName);
+                            }),
+                      ],
+                    ),
+                  ],
+                )),
               ),
             ),
           ),
         ),
       ),
-    ));
+    );
   }
-  void login(){
-    if(formKey.currentState.validate()){
-      print("Valid inputs");
-      Navigator.pushReplacementNamed(context, Dashboard.routeName);
-    }else{
-      print("Invalid input");
-    }
-  }
-  void setPasswordVisiblity() {
-    setState(() {
-      obscureText = !obscureText;
-    });
-  }
+login() async {
+    try {
+      setState(() {
+        isLogginIn = true;
+      });
+      var user = await authService.signInWithGoogle();
+      if (user == null) {
+        print("Invalid user crendentials");
+        return;
+      }
 
-  void navigateRegister(BuildContext context) {
-    Navigator.pushNamed(context, Register.routeName);
+      LocalStorageService.setName(user.user.displayName);
+      LocalStorageService.setUid(user.user.uid);
+
+      Get.offNamed(Dashboard.routeName);
+    } catch (e) {
+      print(e.toString());
+    }
+
+    setState(() {
+      isLogginIn = false;
+    });
   }
 }

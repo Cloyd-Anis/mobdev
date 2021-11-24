@@ -5,10 +5,11 @@ import 'package:cat_app/pages/Settings.dart';
 import 'package:cat_app/models/ImageModel.dart';
 import 'package:flutter/material.dart';
 import 'package:cat_app/widgets/ImageList.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' show get;
 
 class Dashboard extends StatefulWidget {
-  static const String routeName = "dashboard";
+  static  String routeName = "/dashboard";
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -39,16 +40,7 @@ class _DashboardState extends State<Dashboard> {
                 value: 1,
                 child: Text('Profile'),
               ),
-              PopupMenuItem<int>(
-                value: 2,
-                child: Row(
-                  children: [
-                    Icon(Icons.logout),
-                    const SizedBox(width: 5),
-                    Text('Logout')
-                  ],
-                ),
-              ),
+           
             ],
           ),
         ],
@@ -70,13 +62,13 @@ class _DashboardState extends State<Dashboard> {
   void onSelected(BuildContext context, int item) {
     switch (item) {
       case 0:
-        Navigator.pushNamed(context, Settings.routeName);
+        //Navigator.pushNamed(context, Settings.routeName);
+        Get.toNamed(Settings.routeName);
         break;
       case 1:
-        Navigator.pushNamed(context, Profile.routeName);
+        //Navigator.pushNamed(context, Profile.routeName);
+         Get.toNamed(Profile.routeName);
         break;
-      case 2:
-        Navigator.pushReplacementNamed(context, Login.routeName);
     }
   }
 

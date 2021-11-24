@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 
 class Profile extends StatelessWidget {
-  static const routeName = "profile";
+  static String routeName = "/profile";
 
   @override
   Widget build(BuildContext context) {

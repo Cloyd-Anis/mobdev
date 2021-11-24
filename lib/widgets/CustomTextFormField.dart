@@ -1,37 +1,32 @@
 import 'package:flutter/material.dart';
-class CustomTextFormfield extends StatelessWidget {
+
+class CustomTextFormField extends StatelessWidget {
   final String labelText;
   final String hintText;
   final IconData iconData;
-  final TextEditingController textEditingController;
-  final TextInputType textInputType;
-  final Function validation;
+  final TextEditingController controller;
 
-  CustomTextFormfield(
-    {@required this.labelText,
-    @required this.hintText,
-    @required this.iconData,
-    @required this.textEditingController,
-    @required this.textInputType,
-    @required this.validation});
-
+  CustomTextFormField(
+      {@required this.labelText,
+      @required this.hintText,
+      @required this.iconData,
+      @required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: textEditingController,
-      keyboardType: textInputType,
-      validator: validation,
+      keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         prefixIcon: Container(
           padding: EdgeInsets.symmetric(horizontal: 15.0),
-          child: Icon(iconData),
-        ), 
+          child: Icon(
+            iconData,
+          ),
+        ),
         labelText: labelText,
         hintText: hintText,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(30.0)),
-        ),
+            borderRadius: BorderRadius.all(Radius.circular(30.0))),
       ),
     );
   }
